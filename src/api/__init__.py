@@ -3,8 +3,10 @@ from flask_migrate import Migrate
 
 from api.models import db
 from api.routes import api_bp
+from api.admin import setup_admin
+
 from api.commands import setup_commands
-from api.routes import api_bp
+
 
 migrate = Migrate()
 
@@ -16,10 +18,11 @@ def create_app(config_object="api.config.DevelopmentConfig") -> Flask:
     db.init_app(app)
     migrate.init_app(app, db)
 
-    app.register_blueprint(api_bp, url_prefix="/api")
     setup_admin(app)
     setup_commands(app)
 
+    app.register_blueprint(api_bp, url_prefix="/api")
+    
     return app
 
 from api.models import Trainer, Pokemon, Type 
