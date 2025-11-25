@@ -1,3 +1,4 @@
+from __future__ import annotations
 from decimal import Decimal
 
 from sqlalchemy import String, Integer, Numeric
@@ -5,6 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from . import db
 from .type import pokemon_type
+from .ability import pokemon_ability
 
 
 class Pokemon(db.Model):
@@ -21,6 +23,13 @@ class Pokemon(db.Model):
         "Type",
         secondary=pokemon_type,
         back_populates="pokemon",
+    )
+
+    abilities: Mapped[list["Ability"]] = relationship(
+        "Ability",
+        secondary=pokemon_ability,
+        back_populates="pokemon",
+        lazy="selectin",
     )
 
     def __repr__(self) -> str:
