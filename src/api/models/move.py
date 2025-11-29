@@ -10,5 +10,5 @@ from . import db
 
 pokemon_move = db.Table(
     "pokemon_move",
-    db.Column("pokemon_id", ))
+    db.Column("pokemon_id",  ))
 )

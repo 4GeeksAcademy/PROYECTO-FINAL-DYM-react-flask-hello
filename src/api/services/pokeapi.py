@@ -22,8 +22,20 @@ def fetch_pokemon_list(limit: int = 151, offset: int = 0) -> List[Dict[str, Any]
     data = fetch_json("/pokemon", params={"limit": limit, "offset": offset})
     return data["results"]
 
+
 def fetch_pokemon_detail(name_or_id: str | int) -> Dict[str, Any]:
     return fetch_json(f"/pokemon/{name_or_id}")
 
+
 def fetch_ability_detail(name_or_id: str | int) -> Dict[str, Any]:
     return fetch_json(f"/ability/{name_or_id}")
+
+
+def fetch_move_list(limit: int = 200, offset: int = 0) -> List[Dict[str,Any]]:
+    data = fetch_json("/move", params={"limit": limit, "offset": offset})
+    return data["results"]
+
+
+def fetch_move_detail(name_or_id: str | int) -> Dict[str, Any]:
+    return fetch_json(f"/move/{name_or_id}")
+
