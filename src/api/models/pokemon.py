@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from decimal import Decimal
 from typing import TYPE_CHECKING
 
@@ -44,6 +45,13 @@ class Pokemon(db.Model):
         lazy="selectin",
     )
 
+    favorited_by: Mapped[list["Favorite"]] = relationship(
+        "Favorite",
+        back_populates="pokemon",
+        cascade="all, delete-orphan",
+        lazy="selectin"
+    )
+
     def __repr__(self) -> str:
         return f"<Pokemon id={self.id_pk} name='{self.name}'>"
 
@@ -60,5 +68,6 @@ class Pokemon(db.Model):
 
 if TYPE_CHECKING:
     from .ability import Ability
+    from .favorite import Favorite
     from .move import Move
     from .type import Type

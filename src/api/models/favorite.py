@@ -11,8 +11,9 @@ from . import db
 
 class Favorite(db.Model):
     __tablename__ = "favorite"
-    __table_args__ = UniqueConstraint(
-        "trainer_id", "pokemon_id", name="uq_favorite_trainer_pokemon")
+    __table_args__ = (UniqueConstraint(
+        "trainer_id", "pokemon_id", name="uq_favorite_trainer_pokemon"),
+    )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     trainer_id: Mapped[int] = mapped_column(
