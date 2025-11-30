@@ -18,12 +18,12 @@ class Move(db.Model):
     __tablename__ = "move"
     __table_args__ = (
         CheckConstraint("power >=0 OR power IS NULL", name="ck_move_power_non_negative"),
-        CheckConstraint("accuracy BETWEEN 0 ADN 100 OR accuracy IS NULL", name="ck_move_accuracy_range"),
+        CheckConstraint("accuracy BETWEEN 0 AND 100 OR accuracy IS NULL", name="ck_move_accuracy_range"),
     )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(80), unique=True, nullable=False)
-    type_id: Mapped[int | None]  = mapped_column(db.ForeignKey(type.id), nullable=True, index=True)
+    type_id: Mapped[int | None]  = mapped_column(db.ForeignKey("type.id"), nullable=True, index=True)
     damage_class: Mapped[str | None] = mapped_column(String(20), nullable=True)
     power: Mapped[int | None] = mapped_column(Integer, nullable=True)
     accuracy: Mapped[int | None] = mapped_column(Integer, nullable=True)
@@ -32,7 +32,7 @@ class Move(db.Model):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow, nullable=False)
 
     type: Mapped["Type"] = relationship("Type", back_populates="moves", lazy="selectin")
-    pokemon: Mapped[ist["Pokemon"]] = relationship(
+    pokemon: Mapped[list["Pokemon"]] = relationship(
         "Pokemon",
         secondary=pokemon_move,
         back_populates="moves",
@@ -53,7 +53,6 @@ class Move(db.Model):
             "priority": self.priority,
             "type": self.type.name if self.type else None,
         }
-
 
 
     from typing import TYPE_CHECKING
