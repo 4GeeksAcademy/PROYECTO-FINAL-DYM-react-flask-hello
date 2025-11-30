@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import { Layout } from "./pages/Layout";
 import { Home } from "./pages/Home";
+/*import { Welcome } from "./pages/Welcome";*/
 import { Single } from "./pages/Single";
 import { Demo } from "./pages/Demo";
 
