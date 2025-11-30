@@ -1,14 +1,13 @@
+from .favorite import Favorite
+from .move import Move, pokemon_move
+from .ability import Ability, pokemon_ability
+from .type import Type
+from .pokemon import Pokemon
+from .trainer import Trainer
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-from .trainer import Trainer
-from .pokemon import Pokemon
-from .type import Type
-from .ability import Ability, pokemon_ability
-from .move import Move, pokemon_move
 
-
-__all__ = ["db", "Trainer", "Pokemon", "Type", "Ability"]
-
-
+__all__ = ["db", "Trainer", "Pokemon", "Move", "pokemon_move",
+           "Type", "Ability", "pokemon_ability", "Favorite"]
