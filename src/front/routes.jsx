@@ -14,7 +14,7 @@ import { Login } from "./pages/Login";
 import { Favoritos } from "./pages/Favoritos.jsx";
 import { Pokedex } from "./pages/Pokedex.jsx";
 import { Logout } from "./pages/Logout.jsx";
-import { PokemonDetail } from "./pages/PokemonDetail.jsx";
+//import { PokemonDetail } from "./pages/PokemonDetail.jsx";
 
 
 
@@ -50,7 +50,6 @@ export const router = createBrowserRouter(
 
       <Route path="/pokedex" element={<Pokedex />} />
       <Route path="/favoritos" element={<Favoritos />} />
-      <Route path="/pokemon/:id" element={<PokemonDetail />} />
 
 
 

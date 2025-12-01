@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 
 //nuevas funciones para guardar favs
-const API_URL = "https://script.google.com/macros/s/AKfycbz56biKdbO-Gdbzy7Y2BJ3GAVZiqG1ZVUv-uOS3Gx3AGqPCHVXELJ6EUo9mT4vQOaxM/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbz56biKdbO-Gdbzy7Y2BJ3GAVZiqG1ZVUv-uOS3Gx3AGqPCHVXELJ6EUo9mT4vQOaxM/exec"
 
 // Generar o recuperar un userID único para el user
 const getUserId = () => {
