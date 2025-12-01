@@ -53,7 +53,7 @@ export const Logout = () => {
 
                 <Link to="/login">
                     <button className="btn btn-primary w-100 fw-bold" style={{ borderRadius: "12px" }}>
-                        Iniciar sesión nuevamente
+                        Inicia sesión nuevamente
                     </button>
                 </Link>
 
