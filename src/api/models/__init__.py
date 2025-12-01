@@ -2,12 +2,23 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-from .trainer import Trainer
-from .pokemon import Pokemon
-from .type import Type
+from .favorite import Favorite
+from .move import Move, pokemon_move
 from .ability import Ability, pokemon_ability
+from .type import Type, pokemon_type
+from .pokemon import Pokemon
+from .trainer import Trainer
 
 
-__all__ = ["db", "Trainer", "Pokemon", "Type", "Ability"]
-
-
+__all__ = [
+    "db",
+    "Favorite",
+    "Move", 
+    "pokemon_move",
+    "Ability", 
+    "pokemon_ability",
+    "Type",
+    "pokemon_type",
+    "Pokemon",
+    "Trainer",
+    ]
