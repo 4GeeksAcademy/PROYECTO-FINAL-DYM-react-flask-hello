@@ -17,6 +17,7 @@ typing-extensions = "*"
 wtforms = "==3.1.2"
 sqlalchemy = "*"
 requests = "*"
+flask-cors = "*"
 
 [requires]
 python_version = "3.13"
