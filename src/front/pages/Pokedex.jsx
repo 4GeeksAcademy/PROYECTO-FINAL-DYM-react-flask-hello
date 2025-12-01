@@ -1,35 +1,52 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+//funciones para la WEB APP
+const API_URL = "https://script.google.com/macros/s/AKfycbz56biKdbO-Gdbzy7Y2BJ3GAVZiqG1ZVUv-uOS3Gx3AGqPCHVXELJ6EUo9mT4vQOaxM/exec"
+
+
+const getUserId = () => {
+    let userID = localStorage.getItem("userId");
+    if (!userID) {
+        userID = "user_" + Math.random().toString(36).substring(2, 9);
+        localStorage.setItem("userId", userID);
+    }
+    return userID;
+};
 
 // ---- Funciones para LocalStorage ----
-const getFavorites = () => {
-    return JSON.parse(localStorage.getItem("favorites")) || [];
-};
-
-const saveFavorites = (favorites) => {
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-};
-
-const toggleFavorite = (pokemon) => {
-    const favs = getFavorites();
-    const exists = favs.find(fav => fav.id === pokemon.id);
-
-    let updated;
-    if (exists) {
-        updated = favs.filter(fav => fav.id !== pokemon.id);
-    } else {
-        updated = [...favs, pokemon];
+const getFavorites = async () => {
+    try {
+        const userId = getUserId();
+        const response = await fetch(`${API_URL}?action=get&userId=${userId}`);
+        const data = await response.json();
+        return data.items || [];
+    } catch (error) {
+        console.error("Error al obtener favoritos:", error);
+        return [];
     }
+};
 
-    saveFavorites(updated);
-    return updated;
+
+const toggleFavorite = async (pokemon) => {
+    try {
+        const userID = getUserId();
+        await fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "toggle", userID, pokemon })
+        });
+        return await getFavorites();
+    } catch (error) {
+        console.error("Error al alternar favoritos:", error);
+        return await getFavorites();
+    }
 };
 
 export const Pokedex = () => {
     const [pokemonList, setPokemonList] = useState([]);
     const [favorites, setFavorites] = useState([]);
-    
+    const [loading, setLoading] = useState(true);
 
 
     // Pokemones

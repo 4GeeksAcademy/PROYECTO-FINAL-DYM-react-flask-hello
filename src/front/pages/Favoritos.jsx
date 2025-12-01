@@ -1,33 +1,73 @@
 import React, { useEffect, useState } from "react";
 
-// Funciones LocalStorage compartidas
-const getFavorites = () => {
-    return JSON.parse(localStorage.getItem("favorites")) || [];
+
+//nuevas funciones para guardar favs
+const API_URL = "https://script.google.com/macros/s/AKfycbz56biKdbO-Gdbzy7Y2BJ3GAVZiqG1ZVUv-uOS3Gx3AGqPCHVXELJ6EUo9mT4vQOaxM/exec";
+
+// Generar o recuperar un userID único para el user
+const getUserId = () => {
+    let userID = localStorage.getItem("userId");
+    if (!userID) {
+        userID = "user_" + Math.random().toString(36).substring(2, 9);
+        localStorage.setItem("userId", userID);
+    }
+    return userID;
 };
 
-const saveFavorites = (favorites) => {
-    localStorage.setItem("favorites", JSON.stringify(favorites));
+// Get favoritos desde WEB APP
+const getFavorites = async () => {
+    try {
+        const userId = getUserId();
+        const response = await fetch(`${API_URL}?action=get&userId=${userId}`);
+        const data = await response.json();
+        return data.items || [];
+    } catch (error) {
+        console.error("Error al obtener favoritos:", error);
+        return [];
+    }
 };
 
-const removeFavorite = (id) => {
-    const favs = getFavorites().filter(f => f.id !== id);
-    saveFavorites(favs);
-    return favs;
+// DELETE fav de la WE APP
+const removeFavorite = async (id) => {
+    try {
+        const userID = getUserId();
+        await fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "remove", userID, id })
+        });
+
+        return await getFavorites();
+    } catch (error) {
+        console.error("Error al eliminar favorito:", error);
+        return await getFavorites();
+    }
 };
 
 export const Favoritos = () => {
     const [favorites, setFavorites] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        setFavorites(getFavorites());
+        const fetchFavorites = async () => {
+            const favs = await getFavorites();
+            setFavorites(favs);
+            setLoading + (false);
+        };
+        fetchFavorites();
     }, []);
 
-    const handleRemove = (id) => {
+    const handleRemove = async (id) => {
         const updated = removeFavorite(id);
         setFavorites(updated);
     };
 
 
+    if (loading) {
+        return <div className="container mt-4 text-center">
+            Cargando favoritos...
+        </div>
+    }
 
     return (
         <div className="container mt-4">
