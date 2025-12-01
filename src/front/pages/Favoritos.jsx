@@ -1,34 +1,83 @@
 import React, { useEffect, useState } from "react";
 
-// Funciones LocalStorage compartidas
-const getFavorites = () => {
-    return JSON.parse(localStorage.getItem("favorites")) || [];
-};
+import { useNavigate } from "react-router-dom";
 
-const saveFavorites = (favorites) => {
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-};
-
-const removeFavorite = (id) => {
-    const favs = getFavorites().filter(f => f.id !== id);
-    saveFavorites(favs);
-    return favs;
-};
 
 export const Favoritos = () => {
+
     const [favorites, setFavorites] = useState([]);
 
+    const [loading, setLoading] = useState(true);
+
+    const navigate = useNavigate();
+
+    const backendUrl = import.meta.env.VITE_BACKENR_URL;
+
+    const token = localStorage.getItem("token");
+
     useEffect(() => {
-        setFavorites(getFavorites());
+        if (!token) {
+            navigate("/");
+            return
+        }
+
+        fetchFavorites();
+
     }, []);
 
-    const handleRemove = (id) => {
-        const updated = removeFavorite(id);
-        setFavorites(updated);
+    const fetchFavorites = async () => {
+        try {
+            const response = await fetch(`${backendUrl}/api/favorites`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setFavorites(data.favorites || []);
+            } else {
+                console.error("Error al cargar favoritos");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleRemove = async (favoriteId) => {
+        try {
+            const response = await fetch(`${backendUrl}/api/favorites/${favoriteId}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                setFavorites(favorites.filter(fav => fav.id !== favoriteId));
+                alert("Eliminado de favoritos");
+            } else {
+                alert("Error al eliminar");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Error de conexión");
+        }
     };
 
 
-    
+    if (loading) {
+        return (
+            <div className="container mt-4">
+                <h2 className="text-center">Cargando favoritos...
+                </h2>
+            </div>
+        );
+    }
+
     return (
         <div className="container mt-4">
             <h1 className="text-center mb-4">❤️ Tus Pokémon Favoritos</h1>
@@ -58,4 +107,4 @@ export const Favoritos = () => {
             )}
         </div>
     );
-};
+}

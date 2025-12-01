@@ -79,15 +79,33 @@ export const Demo = () => {
   };
 
   return (
-    <div className="container py-5">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1>Mis Listas y Favoritos</h1>
-        <Link to="/pokedex">
-          <button className="btn btn-primary">
-            📖 Volver a la Pokédex
-          </button>
-        </Link>
-      </div>
+    <div className="container">
+      <ul className="list-group">
+        {/* Map over the 'todos' array from the store and render each item as a list element */}
+        {store && store.todos?.map((item) => {
+          return (
+            <li
+              key={item.id}  // React key for list items.
+              className="list-group-item d-flex justify-content-between"
+              style={{ background: item.background }}>
+
+              {/* Link to the detail page of this todo. */}
+              <Link to={"/single/" + item.id}>Nombre: {item.title} </Link>
+
+              <p>Descripción</p>
+
+              <button className="btn btn-success"
+                onClick={() => dispatch({
+                  type: "add_task",
+                  payload: { id: item.id, color: '#ffa500' }
+                })}>
+                Lo tengo
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+      <br />
 
       {loading ? (
         <p className="text-center">Cargando favoritos...</p>

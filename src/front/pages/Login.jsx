@@ -36,8 +36,7 @@ export const Login = () => {
 
 
 
-            // Registro
-     
+            // --- REGISTRO ---
             if (!isLogin) {
                 if (form.password !== form.confirmPassword) {
                     setError("Las contraseñas no coinciden.");
@@ -88,9 +87,8 @@ export const Login = () => {
 
 
 
-            // Login
-
-            const resp = await fetch(`${backendUrl}/api/auth/login`, {
+            // --- LOGIN ---
+            const resp = await fetch(`${backendUrl}/api/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -124,7 +122,7 @@ export const Login = () => {
             className="d-flex justify-content-center align-items-center"
             style={{
                 minHeight: "100vh",
-                background: "linear-gradient(135deg, #3b4cca, #ffcb05)",
+                background: "linear-gradient(135deg, #d42424ff, #3b4cca)",
                 padding: "20px"
             }}
         >
@@ -138,7 +136,6 @@ export const Login = () => {
             >
 
 
-                
                 {/* Logo */}
                 <div className="text-center mb-3">
                     <img
@@ -148,10 +145,16 @@ export const Login = () => {
                     />
                 </div>
 
+
+
+                {/* Titulo */}
                 <h2 className="text-center fw-bold mb-3">
                     {isLogin ? "Iniciar Sesión" : "Crear una Cuenta"}
                 </h2>
 
+
+
+                {/* Form */}
                 <form onSubmit={handleSubmit}>
                     {!isLogin && (
                         <div className="mb-3">
@@ -194,6 +197,9 @@ export const Login = () => {
                         />
                     </div>
 
+
+
+                    {/* Confirma contraseña sooolo para registro*/}
                     {!isLogin && (
                         <div className="mb-3">
                             <label className="form-label fw-bold">Confirmar contraseña</label>
@@ -209,6 +215,9 @@ export const Login = () => {
                         </div>
                     )}
 
+
+
+                    {/* Mensajes */}
                     {error && <p className="text-danger text-center fw-bold">{error}</p>}
                     {success && <p className="text-success text-center fw-bold">{success}</p>}
 
@@ -221,6 +230,9 @@ export const Login = () => {
                     </button>
                 </form>
 
+
+
+                {/* Cambiar login<->registro */}
                 <p className="text-center mt-3">
                     {isLogin ? "¿No tienes cuenta? " : "¿Ya tienes cuenta? "}
                     <span
@@ -235,6 +247,21 @@ export const Login = () => {
                         {isLogin ? "Regístrate aquí" : "Inicia sesión aquí"}
                     </span>
                 </p>
+
+
+
+                {/* RESET PASSWORD ??? *
+                <p className="text-center mt-2">
+                    <span
+                        className="text-secondary"
+                        style={{ cursor: "pointer", textDecoration: "underline" }}
+                        onClick={() => navigate("/reset-password")}
+                    >
+                        ¿Olvidaste tu contraseña?
+                    </span>
+                </p>/*/}
+
+
 
             </div>
         </div>
