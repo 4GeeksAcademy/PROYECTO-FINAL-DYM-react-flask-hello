@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 
+
 export const Login = () => {
     const navigate = useNavigate();
     const { dispatch } = useGlobalReducer();
@@ -33,7 +34,9 @@ export const Login = () => {
                 throw new Error("VITE_BACKEND_URL no está configurada.");
             }
 
-            // --- REGISTRO ---
+            // ---------------------------------------
+            //               REGISTRO
+            // ---------------------------------------
             if (!isLogin) {
                 if (form.password !== form.confirmPassword) {
                     setError("Las contraseñas no coinciden.");
@@ -56,12 +59,35 @@ export const Login = () => {
                     return;
                 }
 
-                setSuccess("Registro exitoso. ¡Ya puedes iniciar sesión!");
-                setIsLogin(true);
+                // Registro correcto → iniciar sesión automáticamente
+                const loginResp = await fetch(`${backendUrl}/api/auth/login`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        email: form.email,
+                        password: form.password
+                    })
+                });
+
+                const loginData = await loginResp.json();
+
+                if (!loginResp.ok) {
+                    setError("Registro exitoso, pero fallo el inicio de sesión.");
+                    return;
+                }
+
+                // Guardar token
+                localStorage.setItem("token", loginData.access_token);
+                dispatch({ type: "set_token", payload: loginData.access_token });
+
+                // Redirigir a Pokedex
+                navigate("/pokedex");
                 return;
             }
 
-            // --- LOGIN ---
+            // ---------------------------------------
+            //                LOGIN
+            // ---------------------------------------
             const resp = await fetch(`${backendUrl}/api/auth/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -115,27 +141,25 @@ export const Login = () => {
                     />
                 </div>
 
-                {/* TÍTULO */}
                 <h2 className="text-center fw-bold mb-3">
                     {isLogin ? "Iniciar Sesión" : "Crear una Cuenta"}
                 </h2>
 
-                {/* FORM */}
                 <form onSubmit={handleSubmit}>
-
-                    <div className="mb-3">
-                        <label className="form-label fw-bold">Nombre de entrenadorx</label>
-                        <input
-                            type="text"
-                            name="displayName"
-                            className="form-control"
-                            placeholder="Ash Ketchum"
-                            value={form.displayName}
-                            onChange={handleChange}
-                            required
-                        />
-
-                    </div>
+                    {!isLogin && (
+                        <div className="mb-3">
+                            <label className="form-label fw-bold">Nombre de entrenadorx</label>
+                            <input
+                                type="text"
+                                name="displayName"
+                                className="form-control"
+                                placeholder="Ash Ketchum"
+                                value={form.displayName}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                    )}
 
                     <div className="mb-3">
                         <label className="form-label fw-bold">Correo electrónico</label>
@@ -163,7 +187,6 @@ export const Login = () => {
                         />
                     </div>
 
-                    {/* CONFIRM PASSWORD SOLO PARA REGISTRO */}
                     {!isLogin && (
                         <div className="mb-3">
                             <label className="form-label fw-bold">Confirmar contraseña</label>
@@ -179,7 +202,6 @@ export const Login = () => {
                         </div>
                     )}
 
-                    {/* MENSAJES */}
                     {error && <p className="text-danger text-center fw-bold">{error}</p>}
                     {success && <p className="text-success text-center fw-bold">{success}</p>}
 
@@ -192,7 +214,6 @@ export const Login = () => {
                     </button>
                 </form>
 
-                {/* CAMBIAR ENTRE LOGIN Y REGISTRO */}
                 <p className="text-center mt-3">
                     {isLogin ? "¿No tienes cuenta? " : "¿Ya tienes cuenta? "}
                     <span
@@ -208,16 +229,6 @@ export const Login = () => {
                     </span>
                 </p>
 
-                {/* RESET PASSWORD *
-                <p className="text-center mt-2">
-                    <span
-                        className="text-secondary"
-                        style={{ cursor: "pointer", textDecoration: "underline" }}
-                        onClick={() => navigate("/reset-password")}
-                    >
-                        ¿Olvidaste tu contraseña?
-                    </span>
-                </p>/*/}
             </div>
         </div>
     );
