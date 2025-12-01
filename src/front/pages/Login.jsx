@@ -1,7 +1,7 @@
+// src/pages/Login.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
-
 
 export const Login = () => {
     const navigate = useNavigate();
@@ -12,231 +12,114 @@ export const Login = () => {
         email: "",
         password: "",
         confirmPassword: "",
-        displayName: "",
+        displayName: ""
     });
 
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
 
-    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-    const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    };
-
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         setError("");
         setSuccess("");
 
-        try {
-            if (!backendUrl) {
-                throw new Error("VITE_BACKEND_URL no está configurada.");
-            }
+        const users = JSON.parse(localStorage.getItem("users")) || [];
 
-
-
-            // Registro
-     
-            if (!isLogin) {
-                if (form.password !== form.confirmPassword) {
-                    setError("Las contraseñas no coinciden.");
-                    return;
-                }
-
-                const resp = await fetch(`${backendUrl}/api/auth/register`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        email: form.email,
-                        password: form.password,
-                        display_name: form.displayName
-                    })
-                });
-
-                const data = await resp.json();
-                if (!resp.ok) {
-                    setError(data.message || "Ocurrió un error al registrarse.");
-                    return;
-                }
-
-                // Registro correcto → iniciar sesión automáticamente
-                const loginResp = await fetch(`${backendUrl}/api/auth/login`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        email: form.email,
-                        password: form.password
-                    })
-                });
-
-                const loginData = await loginResp.json();
-
-                if (!loginResp.ok) {
-                    setError("Registro exitoso, pero fallo el inicio de sesión.");
-                    return;
-                }
-
-                // Guardar token
-                localStorage.setItem("token", loginData.access_token);
-                dispatch({ type: "set_token", payload: loginData.access_token });
-
-                // Redirigir a Pokedex
-                navigate("/pokedex");
+        // Registro local
+        if (!isLogin) {
+            if (form.password !== form.confirmPassword) {
+                setError("Las contraseñas no coinciden.");
                 return;
             }
-
-
-
-            // Login
-
-            const resp = await fetch(`${backendUrl}/api/auth/login`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    email: form.email,
-                    password: form.password
-                })
-            });
-
-            const data = await resp.json();
-
-            if (!resp.ok) {
-                setError(data.message || "Credenciales incorrectas.");
+            const exists = users.find(u => u.email === form.email);
+            if (exists) {
+                setError("Ya existe una cuenta con ese correo.");
                 return;
             }
-
-
-
-            // Guardar/redirigir
-            localStorage.setItem("token", data.access_token);
-            dispatch({ type: "set_token", payload: data.access_token });
-
-            navigate("/pokedex");
-
-        } catch (err) {
-            setError("Error de conexión con el servidor.");
+            const newUser = {
+                email: form.email,
+                password: form.password,
+                displayName: form.displayName,
+                favorites: []
+            };
+            users.push(newUser);
+            localStorage.setItem("users", JSON.stringify(users));
+            setSuccess("Registro exitoso. ¡Ya puedes iniciar sesión!");
+            setIsLogin(true);
+            return;
         }
+
+        // Login local
+        const user = users.find(u => u.email === form.email && u.password === form.password);
+        if (!user) {
+            setError("Credenciales incorrectas.");
+            return;
+        }
+
+        // Guardar usuario logueado
+        localStorage.setItem("loggedUser", JSON.stringify(user));
+
+        // Guardar token (falso) en localStorage y en store para que navbar lo detecte
+        const token = "LOCAL_TOKEN"; // si usas backend pon aquí data.token
+        localStorage.setItem("token", token);
+        dispatch({ type: "set_token", payload: token });
+
+        // Redirigir a pokedex
+        navigate("/pokedex");
     };
 
     return (
-        <div
-            className="d-flex justify-content-center align-items-center"
-            style={{
-                minHeight: "100vh",
-                background: "linear-gradient(135deg, #3b4cca, #ffcb05)",
-                padding: "20px"
-            }}
-        >
-            <div
-                className="card shadow p-4"
-                style={{
-                    width: "420px",
-                    borderRadius: "18px",
-                    background: "white"
-                }}
-            >
-
-
-                
-                {/* Logo */}
+        <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh", background: "linear-gradient(135deg, #d42424ff, #3b4cca)", padding: "20px" }}>
+            <div className="card shadow p-4" style={{ width: "420px", borderRadius: "18px", background: "white" }}>
                 <div className="text-center mb-3">
-                    <img
-                        src="https://www.pngkey.com/png/full/30-309982_19-pokeball-picture-freeuse-stock-ball-pokemon-huge.png"
-                        alt="Master Ball"
-                        style={{ width: "80px" }}
-                    />
+                    <img src="https://www.pngkey.com/png/full/30-309982_19-pokeball-picture-freeuse-stock-ball-pokemon-huge.png" alt="Master Ball" style={{ width: "80px" }} />
                 </div>
 
-                <h2 className="text-center fw-bold mb-3">
-                    {isLogin ? "Iniciar Sesión" : "Crear una Cuenta"}
-                </h2>
+                <h2 className="text-center fw-bold mb-3">{isLogin ? "Iniciar Sesión" : "Crear una Cuenta"}</h2>
 
                 <form onSubmit={handleSubmit}>
                     {!isLogin && (
                         <div className="mb-3">
                             <label className="form-label fw-bold">Nombre de entrenadorx</label>
-                            <input
-                                type="text"
-                                name="displayName"
-                                className="form-control"
-                                placeholder="Ash Ketchum"
-                                value={form.displayName}
-                                onChange={handleChange}
-                                required
-                            />
+                            <input type="text" name="displayName" className="form-control" placeholder="Ash Ketchum" value={form.displayName} onChange={handleChange} required />
                         </div>
                     )}
 
                     <div className="mb-3">
                         <label className="form-label fw-bold">Correo electrónico</label>
-                        <input
-                            type="email"
-                            name="email"
-                            className="form-control"
-                            placeholder="tu@correo.com"
-                            value={form.email}
-                            onChange={handleChange}
-                            required
-                        />
+                        <input type="email" name="email" className="form-control" placeholder="tu@correo.com" value={form.email} onChange={handleChange} required />
                     </div>
 
                     <div className="mb-3">
                         <label className="form-label fw-bold">Contraseña</label>
-                        <input
-                            type="password"
-                            name="password"
-                            className="form-control"
-                            placeholder="********"
-                            value={form.password}
-                            onChange={handleChange}
-                            required
-                        />
+                        <input type="password" name="password" className="form-control" placeholder="********" value={form.password} onChange={handleChange} required />
                     </div>
 
                     {!isLogin && (
                         <div className="mb-3">
                             <label className="form-label fw-bold">Confirmar contraseña</label>
-                            <input
-                                type="password"
-                                name="confirmPassword"
-                                className="form-control"
-                                placeholder="********"
-                                value={form.confirmPassword}
-                                onChange={handleChange}
-                                required
-                            />
+                            <input type="password" name="confirmPassword" className="form-control" placeholder="********" value={form.confirmPassword} onChange={handleChange} required />
                         </div>
                     )}
 
                     {error && <p className="text-danger text-center fw-bold">{error}</p>}
                     {success && <p className="text-success text-center fw-bold">{success}</p>}
 
-                    <button
-                        type="submit"
-                        className="btn btn-primary w-100 fw-bold mt-3"
-                        style={{ borderRadius: "12px" }}
-                    >
+                    <button type="submit" className="btn btn-primary w-100 fw-bold mt-3" style={{ borderRadius: "12px" }}>
                         {isLogin ? "Ingresar" : "Registrarse"}
                     </button>
                 </form>
 
                 <p className="text-center mt-3">
                     {isLogin ? "¿No tienes cuenta? " : "¿Ya tienes cuenta? "}
-                    <span
-                        className="text-primary fw-bold"
-                        style={{ cursor: "pointer" }}
-                        onClick={() => {
-                            setIsLogin(!isLogin);
-                            setError("");
-                            setSuccess("");
-                        }}
-                    >
+                    <span className="text-primary fw-bold" style={{ cursor: "pointer" }} onClick={() => { setIsLogin(!isLogin); setError(""); setSuccess(""); }}>
                         {isLogin ? "Regístrate aquí" : "Inicia sesión aquí"}
                     </span>
                 </p>
-
             </div>
         </div>
     );
 };
+

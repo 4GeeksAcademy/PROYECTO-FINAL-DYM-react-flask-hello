@@ -5,10 +5,7 @@ export const Logout = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-
-
-
-        // Cerrar sesión
+        // Limpiar sesión
         localStorage.removeItem("token");
         localStorage.removeItem("favorites");  // si quieres borrar también esto
     }, []);
@@ -35,15 +32,11 @@ export const Logout = () => {
             >
                 <h2 className="fw-bold mb-3">¡Hasta pronto, entrenadorx!</h2>
 
-                {/* IMAGEN CENTRADA */}
-                <div className="text-center mb-3">
-                    <img
-                        src="src/front/pages/pngegg.png"
-                        alt="Pokeball Bye"
-                        style={{ width: "350px" }}
-                    />
-                </div>
-
+                <img
+                    src="src/front/pages/pngegg.png"
+                    alt="Pokeball Bye"
+                    style={{ size: "250px" }}
+                />
 
                 <p className="fs-5 mb-3">
                     Tu sesión ha sido cerrada exitosamente.
@@ -53,7 +46,7 @@ export const Logout = () => {
 
                 <Link to="/login">
                     <button className="btn btn-primary w-100 fw-bold" style={{ borderRadius: "12px" }}>
-                        Inicia sesión nuevamente
+                        Iniciar sesión nuevamente
                     </button>
                 </Link>
 
