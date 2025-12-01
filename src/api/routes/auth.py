@@ -64,7 +64,7 @@ def login_trainer():
     if not trainer or not trainer.check_password(password):
         return jsonify({"message": "Credenciales inválidas"}), HTTPStatus.UNAUTHORIZED
 
-    access_token = create_access_token(Trainer)
+    access_token = create_access_token(trainer)
     return jsonify({"trainer": trainer.serialize(), "access_token": access_token})
 
 
