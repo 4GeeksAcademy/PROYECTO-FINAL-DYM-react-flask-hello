@@ -96,7 +96,7 @@ export const Login = () => {
             className="d-flex justify-content-center align-items-center"
             style={{
                 minHeight: "100vh",
-                background: "linear-gradient(135deg, #3b4cca, #ffcb05)",
+                background: "linear-gradient(135deg, #d42424ff, #3b4cca)",
                 padding: "20px"
             }}
         >
