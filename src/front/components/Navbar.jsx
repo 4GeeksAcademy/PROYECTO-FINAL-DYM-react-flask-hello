@@ -37,10 +37,10 @@ export const Navbar = () => {
                 {/* Botones a la derecha */}
                 <div className="d-flex gap-3">
 
-                    {/* Botón siempre visible: Inicio */}
+                    {/* Botón siempre visible: Inicio 
                     <Link to="/" className="btn btn-light fw-bold">
-                        Inicio
-                    </Link>
+                        Inicio*
+                    </Link>*/}
 
                     {/* Favoritooos 
                     <Link to="/favoritos">
