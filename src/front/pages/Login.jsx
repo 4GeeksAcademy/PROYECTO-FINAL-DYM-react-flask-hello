@@ -10,7 +10,8 @@ export const Login = () => {
     const [form, setForm] = useState({
         email: "",
         password: "",
-        confirmPassword: ""
+        confirmPassword: "",
+        displayName: "",
     });
 
     const [error, setError] = useState("");
@@ -32,14 +33,33 @@ export const Login = () => {
                 throw new Error("VITE_BACKEND_URL no está configurada.");
             }
 
-            // --- REGISTRO ---
+            // ---------------------------------------
+            //               REGISTRO
+            // ---------------------------------------
             if (!isLogin) {
                 if (form.password !== form.confirmPassword) {
                     setError("Las contraseñas no coinciden.");
                     return;
                 }
 
-                const resp = await fetch(`${backendUrl}/api/register`, {
+                const resp = await fetch(`${backendUrl}/api/auth/register`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        email: form.email,
+                        password: form.password,
+                        display_name: form.displayName
+                    })
+                });
+
+                const data = await resp.json();
+                if (!resp.ok) {
+                    setError(data.message || "Ocurrió un error al registrarse.");
+                    return;
+                }
+
+                // Registro correcto → iniciar sesión automáticamente
+                const loginResp = await fetch(`${backendUrl}/api/auth/login`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -48,19 +68,26 @@ export const Login = () => {
                     })
                 });
 
-                const data = await resp.json();
-                if (!resp.ok) {
-                    setError(data.msg || "Ocurrió un error al registrarse.");
+                const loginData = await loginResp.json();
+
+                if (!loginResp.ok) {
+                    setError("Registro exitoso, pero fallo el inicio de sesión.");
                     return;
                 }
 
-                setSuccess("Registro exitoso. ¡Ya puedes iniciar sesión!");
-                setIsLogin(true);
+                // Guardar token
+                localStorage.setItem("token", loginData.access_token);
+                dispatch({ type: "set_token", payload: loginData.access_token });
+
+                // Redirigir a Pokedex
+                navigate("/pokedex");
                 return;
             }
 
-            // --- LOGIN ---
-            const resp = await fetch(`${backendUrl}/api/login`, {
+            // ---------------------------------------
+            //                LOGIN
+            // ---------------------------------------
+            const resp = await fetch(`${backendUrl}/api/auth/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -72,13 +99,13 @@ export const Login = () => {
             const data = await resp.json();
 
             if (!resp.ok) {
-                setError(data.msg || "Credenciales incorrectas.");
+                setError(data.message || "Credenciales incorrectas.");
                 return;
             }
 
             // Guardar token y redirigir
-            localStorage.setItem("token", data.token);
-            dispatch({ type: "set_token", payload: data.token });
+            localStorage.setItem("token", data.access_token);
+            dispatch({ type: "set_token", payload: data.access_token });
 
             navigate("/pokedex");
 
@@ -113,13 +140,25 @@ export const Login = () => {
                     />
                 </div>
 
-                {/* TÍTULO */}
                 <h2 className="text-center fw-bold mb-3">
                     {isLogin ? "Iniciar Sesión" : "Crear una Cuenta"}
                 </h2>
 
-                {/* FORM */}
                 <form onSubmit={handleSubmit}>
+                    {!isLogin && (
+                        <div className="mb-3">
+                            <label className="form-label fw-bold">Nombre de entrenadorx</label>
+                            <input
+                                type="text"
+                                name="displayName"
+                                className="form-control"
+                                placeholder="Ash Ketchum"
+                                value={form.displayName}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                    )}
 
                     <div className="mb-3">
                         <label className="form-label fw-bold">Correo electrónico</label>
@@ -147,7 +186,6 @@ export const Login = () => {
                         />
                     </div>
 
-                    {/* CONFIRM PASSWORD SOLO PARA REGISTRO */}
                     {!isLogin && (
                         <div className="mb-3">
                             <label className="form-label fw-bold">Confirmar contraseña</label>
@@ -163,7 +201,6 @@ export const Login = () => {
                         </div>
                     )}
 
-                    {/* MENSAJES */}
                     {error && <p className="text-danger text-center fw-bold">{error}</p>}
                     {success && <p className="text-success text-center fw-bold">{success}</p>}
 
@@ -176,7 +213,6 @@ export const Login = () => {
                     </button>
                 </form>
 
-                {/* CAMBIAR ENTRE LOGIN Y REGISTRO */}
                 <p className="text-center mt-3">
                     {isLogin ? "¿No tienes cuenta? " : "¿Ya tienes cuenta? "}
                     <span
@@ -192,16 +228,6 @@ export const Login = () => {
                     </span>
                 </p>
 
-                {/* RESET PASSWORD *
-                <p className="text-center mt-2">
-                    <span
-                        className="text-secondary"
-                        style={{ cursor: "pointer", textDecoration: "underline" }}
-                        onClick={() => navigate("/reset-password")}
-                    >
-                        ¿Olvidaste tu contraseña?
-                    </span>
-                </p>/*/}
             </div>
         </div>
     );
