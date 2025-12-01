@@ -40,4 +40,8 @@ def create_app(config_object="api.config.DevelopmentConfig") -> Flask:
     app.register_blueprint(favorites.bp, url_prefix="/api/favorites")
     app.register_blueprint(pokemon.bp, url_prefix="/api/pokemon")
 
+    @app.route("/")
+    def index():
+        return {"message": "API funcionando correctamente"}
+
     return app

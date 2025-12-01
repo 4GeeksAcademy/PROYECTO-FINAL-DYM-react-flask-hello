@@ -88,7 +88,7 @@ export const Login = () => {
 
 
             // --- LOGIN ---
-            const resp = await fetch(`${backendUrl}/api/login`, {
+            const resp = await fetch(`${backendUrl}/api/auth/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
