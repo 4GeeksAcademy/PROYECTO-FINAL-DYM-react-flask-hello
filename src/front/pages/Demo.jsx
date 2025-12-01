@@ -15,16 +15,16 @@ export const Demo = () => {
             <li
               key={item.id}  // React key for list items.
               className="list-group-item d-flex justify-content-between"
-              style={{ background: item.background }}> 
-              
+              style={{ background: item.background }}>
+
               {/* Link to the detail page of this todo. */}
               <Link to={"/single/" + item.id}>Nombre: {item.title} </Link>
-              
+
               <p>Descripción</p>
-              
-              <button className="btn btn-success" 
+
+              <button className="btn btn-success"
                 onClick={() => dispatch({
-                  type: "add_task", 
+                  type: "add_task",
                   payload: { id: item.id, color: '#ffa500' }
                 })}>
                 Lo tengo

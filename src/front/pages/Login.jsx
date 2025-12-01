@@ -32,6 +32,8 @@ export const Login = () => {
                 throw new Error("VITE_BACKEND_URL no está configurada.");
             }
 
+
+
             // --- REGISTRO ---
             if (!isLogin) {
                 if (form.password !== form.confirmPassword) {
@@ -58,6 +60,8 @@ export const Login = () => {
                 setIsLogin(true);
                 return;
             }
+
+
 
             // --- LOGIN ---
             const resp = await fetch(`${backendUrl}/api/login`, {
@@ -104,7 +108,10 @@ export const Login = () => {
                     background: "white"
                 }}
             >
-                {/* LOGO */}
+
+
+
+                {/* Logo */}
                 <div className="text-center mb-3">
                     <img
                         src="https://www.pngkey.com/png/full/30-309982_19-pokeball-picture-freeuse-stock-ball-pokemon-huge.png"
@@ -113,12 +120,16 @@ export const Login = () => {
                     />
                 </div>
 
-                {/* TÍTULO */}
+
+
+                {/* Titulo */}
                 <h2 className="text-center fw-bold mb-3">
                     {isLogin ? "Iniciar Sesión" : "Crear una Cuenta"}
                 </h2>
 
-                {/* FORM */}
+
+
+                {/* Form */}
                 <form onSubmit={handleSubmit}>
 
                     <div className="mb-3">
@@ -147,7 +158,9 @@ export const Login = () => {
                         />
                     </div>
 
-                    {/* CONFIRM PASSWORD SOLO PARA REGISTRO */}
+
+
+                    {/* Confirma contraseña sooolo para registro*/}
                     {!isLogin && (
                         <div className="mb-3">
                             <label className="form-label fw-bold">Confirmar contraseña</label>
@@ -163,7 +176,9 @@ export const Login = () => {
                         </div>
                     )}
 
-                    {/* MENSAJES */}
+
+
+                    {/* Mensajes */}
                     {error && <p className="text-danger text-center fw-bold">{error}</p>}
                     {success && <p className="text-success text-center fw-bold">{success}</p>}
 
@@ -176,7 +191,9 @@ export const Login = () => {
                     </button>
                 </form>
 
-                {/* CAMBIAR ENTRE LOGIN Y REGISTRO */}
+
+
+                {/* Cambiar login<->registro */}
                 <p className="text-center mt-3">
                     {isLogin ? "¿No tienes cuenta? " : "¿Ya tienes cuenta? "}
                     <span
@@ -192,7 +209,9 @@ export const Login = () => {
                     </span>
                 </p>
 
-                {/* RESET PASSWORD *
+
+
+                {/* RESET PASSWORD ??? *
                 <p className="text-center mt-2">
                     <span
                         className="text-secondary"
@@ -202,6 +221,9 @@ export const Login = () => {
                         ¿Olvidaste tu contraseña?
                     </span>
                 </p>/*/}
+
+
+
             </div>
         </div>
     );
