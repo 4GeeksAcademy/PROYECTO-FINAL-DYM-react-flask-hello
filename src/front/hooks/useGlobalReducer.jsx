@@ -7,8 +7,7 @@ import {
     useRef,
 } from "react";
 
-import storeReducer, { initialStore } from "../store";
-import { ACTIONS } from "../store/actions.js";
+import storeReducer, { initialStore, ACTIONS } from "../store.js";
 import apiClient from "../services/apiClient.js";
 import { favoritesService } from "../services/favoritesService.js";
 

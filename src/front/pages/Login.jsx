@@ -39,7 +39,7 @@ export const Login = () => {
                     return;
                 }
 
-                const resp = await fetch(`${backendUrl}/api/register`, {
+                const resp = await fetch(`${backendUrl}/api/auth/register`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -60,7 +60,7 @@ export const Login = () => {
             }
 
             // --- LOGIN ---
-            const resp = await fetch(`${backendUrl}/api/login`, {
+            const resp = await fetch(`${backendUrl}/api/auth/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
