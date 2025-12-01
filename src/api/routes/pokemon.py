@@ -47,3 +47,5 @@ def get_pokemon(pokedex_number: int):
     payload["moves"] = [move.serialize() for move in pokemon.moves]
 
     return jsonify(payload)
+
+

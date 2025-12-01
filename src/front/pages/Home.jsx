@@ -39,8 +39,6 @@ export const Home = () => {
 		<div
 			className="cw-100 d-flex flex-column justify-content-center align-items-center pokedex-bg mx-auto "
 
-
-
 			style={{
 				minHeight: "100vh",
 				background: "linear-gradient(135deg, #d42424ff, #3b4cca)",
@@ -79,7 +77,7 @@ export const Home = () => {
 
 
 
-			{/* Imagen opcional 
+			{/* Imagen opcional ???
 			
 			<img
 				src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"
@@ -90,21 +88,6 @@ export const Home = () => {
 
 			*/}
 
-
-
-			{/* Botón inicio sesión y registro 
-			<button
-				onClick={() => navigate("/login")}
-				className="btn btn-light btn-lg px-5 py-3 fw-bold shadow"
-				style={{
-					borderRadius: "50px",
-					fontSize: "1.3rem"
-				}}
-			>
-				Iniciar sesión / Registrarse
-			</button>*/}
-
-			{/* Footer */}
 
 		</div>
 	);

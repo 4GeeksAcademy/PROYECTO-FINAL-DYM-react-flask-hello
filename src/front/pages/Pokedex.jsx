@@ -1,140 +1,106 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
+
+
+// ---- Funciones para LocalStorage ----
+const getFavorites = () => {
+    return JSON.parse(localStorage.getItem("favorites")) || [];
+};
+
+const saveFavorites = (favorites) => {
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+};
+
+const toggleFavorite = (pokemon) => {
+    const favs = getFavorites();
+    const exists = favs.find(fav => fav.id === pokemon.id);
+
+    let updated;
+    if (exists) {
+        updated = favs.filter(fav => fav.id !== pokemon.id);
+    } else {
+        updated = [...favs, pokemon];
+    }
+
+    saveFavorites(updated);
+    return updated;
+};
 
 export const Pokedex = () => {
-    const navigate = useNavigate();
     const [pokemonList, setPokemonList] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [page, setPage] = useState(1);
-    const perPage = 20;
+    const [favorites, setFavorites] = useState([]);
+    
 
-    const backendUrl = import.meta.env.VITE_BACKEND_URL;
-    const token = localStorage.getItem("token");
 
-    // Protege la ruta
-    useEffect(() => {
-        if (!token) {
-            navigate("/login");
-        }
-    }, []);
-
-    // Llamada a PokeAPI
+    // Pokemones
     useEffect(() => {
         const fetchPokemons = async () => {
-            try {
-                setLoading(true);
+            const resp = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
+            const data = await resp.json();
 
-                const resp = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
-                const data = await resp.json();
+            const detailed = await Promise.all(
+                data.results.map(async (p, index) => {
+                    const info = await fetch(p.url).then(r => r.json());
+                    return {
+                        id: info.id,
+                        name: info.name,
+                        sprite: info.sprites.front_default
+                    };
+                })
+            );
 
-                // Traer imágenes
-                const enriched = data.results.map((poke, index) => ({
-                    id: index + 1,
-                    name: poke.name,
-                    sprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index + 1}.png`
-                }));
-
-                setPokemonList(enriched);
-            } catch (err) {
-                console.log("Error cargando Pokémon:", err);
-            } finally {
-                setLoading(false);
-            }
+            setPokemonList(detailed);
         };
 
         fetchPokemons();
+        setFavorites(getFavorites());
     }, []);
 
-    // Añadir a favoritos
-    const addToFavorites = async (pokemon) => {
-        if (!token) {
-            alert("Debes iniciar sesión");
-            return;
-        }
-
-        try {
-            const response = await fetch(`${backendUrl}/api/favorites`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    pokemon_id: pokemon.id,
-                    pokemon_name: pokemon.name,
-                    pokemon_sprite: pokemon.sprite
-                })
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                alert(`¡${pokemon.name} añadido a favoritos!`);
-            } else {
-                alert(data.message || "Error al añadir a favoritos");
-            }
-        } catch (error) {
-            console.error("Error:", error);
-            alert("Error de conexión");
-        }
+    const handleFavorite = (poke) => {
+        const updated = toggleFavorite(poke);
+        setFavorites(updated);
     };
 
-    const start = (page - 1) * perPage;
-    const end = start + perPage;
-    const pagePokemons = pokemonList.slice(start, end);
+    const isFavorite = (id) => {
+        return favorites.some(f => f.id === id);
+    };
 
     return (
-        <div className="container py-5">
-            <div className="d-flex justify-content-between align-items-center mb-4">
-                <h1>Pokédex de Kanto</h1>
-                <Link to="/Demo">
-                    <button className="btn btn-warning">
-                        ⭐ Ver mis Listas y Favoritos
+        <div className="container mt-4">
+            <h1 className="text-center mb-4">Pokédex de Kanto</h1>
+            <div className="text-center mb-4">
+                <Link to="/favoritos">
+                    <button className="btn btn-warning fw-bold">
+                        ⭐ Ver mis favoritos
                     </button>
                 </Link>
             </div>
 
-            {loading ? (
-                <p className="text-center">Cargando...</p>
-            ) : (
-                <div className="row">
-                    {pagePokemons.map((poke) => (
-                        <div className="col-6 col-md-3 mb-4" key={poke.id}>
-                            <div className="card text-center p-3 h-100">
-                                <img src={poke.sprite} alt={poke.name} />
-                                <h5 className="mt-2 text-capitalize">{poke.name}</h5>
-                                <p className="text-muted">#{poke.id}</p>
 
-                                {/* Botón añadir a favoritos */}
-                                <button
-                                    className="btn btn-success btn-sm mt-2"
-                                    onClick={() => addToFavorites(poke)}
-                                >
-                                    ❤️ Añadir a favoritos
-                                </button>
-                            </div>
+            <div className="row">
+                {pokemonList.map(poke => (
+                    <div key={poke.id} className="col-6 col-md-3 col-lg-2 mb-4">
+
+                        <div className="card text-center p-2">
+                            <img src={poke.sprite} alt={poke.name} />
+
+                            <h5 className="mt-2">{poke.name}</h5>
+                            <p>#{poke.id}</p>
+
+                            <button
+                                className={`btn w-100 fw-bold ${isFavorite(poke.id)
+                                    ? "btn-danger"
+                                    : "btn-success"
+                                    }`}
+                                onClick={() => handleFavorite(poke)}
+                            >
+                                {isFavorite(poke.id)
+                                    ? "💔 Quitar de favoritos"
+                                    : "💚 Añadir a favoritos"}
+                            </button>
                         </div>
-                    ))}
-                </div>
-            )}
-
-            {/* Controles de paginación */}
-            <div className="d-flex justify-content-center mt-4">
-                <button
-                    className="btn btn-secondary mx-2"
-                    disabled={page === 1}
-                    onClick={() => setPage(page - 1)}
-                >
-                    Anterior
-                </button>
-
-                <button
-                    className="btn btn-primary mx-2"
-                    disabled={end >= pokemonList.length}
-                    onClick={() => setPage(page + 1)}
-                >
-                    Siguiente
-                </button>
+                    </div>
+                ))}
             </div>
         </div>
     );

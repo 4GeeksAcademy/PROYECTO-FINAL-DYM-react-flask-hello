@@ -24,6 +24,11 @@ export const Navbar = () => {
         >
             <div className="container-fluid">
 
+
+
+
+
+
                 {/* Logo / Inicio */}
                 <Link to="/" className="navbar-brand fw-bold text-white" style={{ fontSize: "1.4rem" }}>
                     Pokédex
@@ -36,6 +41,12 @@ export const Navbar = () => {
                     <Link to="/" className="btn btn-light fw-bold">
                         Inicio
                     </Link>
+
+                    {/* Favoritooos 
+                    <Link to="/favoritos">
+                        <span className="btn btn-warning ms-2">⭐ Favoritos</span>
+                    </Link>*/}
+
 
                     {/* Si el usuario NO está logueado */}
                     {!isLogged && (
@@ -51,16 +62,14 @@ export const Navbar = () => {
                                 Mi Pokédex
                             </Link>
 
-                            <Link to="/demo" className="btn btn-light fw-bold">
+                            {/*<Link to="/demo" className="btn btn-light fw-bold">
                                 Listas
+                            </Link>*/}
+
+                            <Link to="/logout">
+                                <span className="btn btn-danger ms-2">Cerrar sesión</span>
                             </Link>
 
-                            <button
-                                className="btn btn-dark fw-bold"
-                                onClick={handleLogout}
-                            >
-                                Cerrar sesión
-                            </button>
                         </>
                     )}
                 </div>

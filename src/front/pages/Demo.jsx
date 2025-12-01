@@ -11,7 +11,10 @@ export const Demo = () => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const token = localStorage.getItem("token");
 
-  // Protege la ruta
+
+  ///////////////
+
+
   useEffect(() => {
     if (!token) {
       navigate("/login");
@@ -20,7 +23,10 @@ export const Demo = () => {
     }
   }, []);
 
+
   // Obtener favoritos del backend
+
+
   const fetchFavorites = async () => {
     try {
       setLoading(true);
@@ -45,7 +51,10 @@ export const Demo = () => {
     }
   };
 
+
   // Eliminar de favoritos
+
+
   const removeFromFavorites = async (favoriteId) => {
     try {
       const response = await fetch(`${backendUrl}/api/favorites/${favoriteId}`, {
@@ -105,7 +114,7 @@ export const Demo = () => {
                 <h5 className="mt-2 text-capitalize">{fav.pokemon_name}</h5>
                 <p className="text-muted">#{fav.pokemon_id}</p>
 
-                {/* Botón eliminar */}
+                {/* Boton eliminar */}
                 <button
                   className="btn btn-danger btn-sm mt-2"
                   onClick={() => removeFromFavorites(fav.id)}

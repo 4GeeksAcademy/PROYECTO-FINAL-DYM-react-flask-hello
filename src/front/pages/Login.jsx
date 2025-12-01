@@ -34,9 +34,10 @@ export const Login = () => {
                 throw new Error("VITE_BACKEND_URL no está configurada.");
             }
 
-            // ---------------------------------------
-            //               REGISTRO
-            // ---------------------------------------
+
+
+            // Registro
+     
             if (!isLogin) {
                 if (form.password !== form.confirmPassword) {
                     setError("Las contraseñas no coinciden.");
@@ -85,9 +86,10 @@ export const Login = () => {
                 return;
             }
 
-            // ---------------------------------------
-            //                LOGIN
-            // ---------------------------------------
+
+
+            // Login
+
             const resp = await fetch(`${backendUrl}/api/auth/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -104,7 +106,9 @@ export const Login = () => {
                 return;
             }
 
-            // Guardar token y redirigir
+
+
+            // Guardar/redirigir
             localStorage.setItem("token", data.access_token);
             dispatch({ type: "set_token", payload: data.access_token });
 
@@ -132,7 +136,10 @@ export const Login = () => {
                     background: "white"
                 }}
             >
-                {/* LOGO */}
+
+
+                
+                {/* Logo */}
                 <div className="text-center mb-3">
                     <img
                         src="https://www.pngkey.com/png/full/30-309982_19-pokeball-picture-freeuse-stock-ball-pokemon-huge.png"
