@@ -1,3 +1,4 @@
+from api.models import Trainer, Pokemon, Type
 from flask import Flask
 from flask_migrate import Migrate
 
@@ -26,10 +27,8 @@ def create_app(config_object="api.config.DevelopmentConfig") -> Flask:
     setup_commands(app)
 
     app.register_blueprint(api_bp, url_prefix="/api")
-    app.register_blueprint(auth.bp, url_prefix="/api")
-    app.register_blueprint(favorites.bp, url_prefix="/api")
-    app.register_blueprint(pokemon.bp, url_prefix="/api")
-    
-    return app
+    app.register_blueprint(auth.bp, url_prefix="/api/auth")
+    app.register_blueprint(favorites.bp, url_prefix="/api/favorites")
+    app.register_blueprint(pokemon.bp, url_prefix="/api/pokemon")
 
-from api.models import Trainer, Pokemon, Type 
+    return app
