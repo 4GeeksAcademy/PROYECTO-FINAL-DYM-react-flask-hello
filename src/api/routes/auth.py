@@ -7,7 +7,7 @@ from api.utils.auth import create_access_token, login_required
 
 from api.utils.ctx import current_trainer
 
-bp = Blueprint("auth", _name_, url_prefix="")
+bp = Blueprint("auth", __name__, url_prefix="")
 
 
 @bp.post("/register")
