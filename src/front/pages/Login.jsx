@@ -10,7 +10,8 @@ export const Login = () => {
     const [form, setForm] = useState({
         email: "",
         password: "",
-        confirmPassword: ""
+        confirmPassword: "",
+        displayName: "",
     });
 
     const [error, setError] = useState("");

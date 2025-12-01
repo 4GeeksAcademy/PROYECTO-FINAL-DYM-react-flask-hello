@@ -1,6 +1,7 @@
 from api.models import Trainer, Pokemon, Type
 from flask import Flask
 from flask_migrate import Migrate
+from flask_cors import CORS
 
 from api.admin import setup_admin
 from api.commands import setup_commands
@@ -19,6 +20,14 @@ migrate = Migrate()
 def create_app(config_object="api.config.DevelopmentConfig") -> Flask:
     app = Flask(__name__)
     app.config.from_object(config_object)
+
+    CORS(app, resources={
+        r"/api/*": {
+            "origins": "*",
+            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            "allow_headers": ["Content-Type", "Authorization"]
+        }
+    })
 
     db.init_app(app)
     migrate.init_app(app, db)
