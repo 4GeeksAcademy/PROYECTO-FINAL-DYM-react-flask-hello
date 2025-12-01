@@ -45,13 +45,14 @@ export const Login = () => {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         email: form.email,
-                        password: form.password
+                        password: form.password,
+                        display_name: form.displayName
                     })
                 });
 
                 const data = await resp.json();
                 if (!resp.ok) {
-                    setError(data.msg || "Ocurrió un error al registrarse.");
+                    setError(data.message || "Ocurrió un error al registrarse.");
                     return;
                 }
 
@@ -73,13 +74,13 @@ export const Login = () => {
             const data = await resp.json();
 
             if (!resp.ok) {
-                setError(data.msg || "Credenciales incorrectas.");
+                setError(data.message || "Credenciales incorrectas.");
                 return;
             }
 
             // Guardar token y redirigir
-            localStorage.setItem("token", data.token);
-            dispatch({ type: "set_token", payload: data.token });
+            localStorage.setItem("token", data.access_token);
+            dispatch({ type: "set_token", payload: data.access_token });
 
             navigate("/pokedex");
 
@@ -121,6 +122,20 @@ export const Login = () => {
 
                 {/* FORM */}
                 <form onSubmit={handleSubmit}>
+
+                    <div className="mb-3">
+                        <label className="form-label fw-bold">Nombre de entrenadorx</label>
+                        <input
+                            type="text"
+                            name="displayName"
+                            className="form-control"
+                            placeholder="Ash Ketchum"
+                            value={form.displayName}
+                            onChange={handleChange}
+                            required
+                        />
+
+                    </div>
 
                     <div className="mb-3">
                         <label className="form-label fw-bold">Correo electrónico</label>
