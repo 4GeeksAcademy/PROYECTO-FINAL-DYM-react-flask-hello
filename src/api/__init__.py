@@ -1,6 +1,8 @@
 from flask import Flask
 from flask_migrate import Migrate
 
+from flask_cors import CORS
+
 from api.models import db
 from api.routes import api_bp
 from api.admin import setup_admin
@@ -20,6 +22,8 @@ def create_app(config_object="api.config.DevelopmentConfig") -> Flask:
 
     setup_admin(app)
     setup_commands(app)
+
+    CORS(app)
 
     app.register_blueprint(api_bp, url_prefix="/api")
     
