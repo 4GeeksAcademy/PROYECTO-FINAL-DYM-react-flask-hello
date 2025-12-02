@@ -79,53 +79,37 @@ export const Demo = () => {
   };
 
   return (
-    <div className="container py-5">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1>Mis Listas y Favoritos</h1>
-        <Link to="/pokedex">
-          <button className="btn btn-primary">
-            📖 Volver a la Pokédex
-          </button>
-        </Link>
-      </div>
+    <div className="container">
+      <ul className="list-group">
+        {/* Map over the 'todos' array from the store and render each item as a list element */}
+        {store && store.todos?.map((item) => {
+          return (
+            <li
+              key={item.id}  // React key for list items.
+              className="list-group-item d-flex justify-content-between"
+              style={{ background: item.background }}>
 
-      {loading ? (
-        <p className="text-center">Cargando favoritos...</p>
-      ) : favorites.length === 0 ? (
-        <div className="text-center mt-5">
-          <h3>No tienes favoritos aún</h3>
-          <p className="text-muted">Ve a la Pokédex y añade algunos Pokémon</p>
-          <Link to="/pokedex">
-            <button className="btn btn-success mt-3">
-              Ir a la Pokédex
-            </button>
-          </Link>
-        </div>
-      ) : (
-        <div className="row">
-          {favorites.map((fav) => (
-            <div className="col-6 col-md-3 mb-4" key={fav.id}>
-              <div className="card text-center p-3 h-100">
-                <img
-                  src={fav.pokemon_sprite}
-                  alt={fav.pokemon_name}
-                  style={{ width: "96px", margin: "0 auto" }}
-                />
-                <h5 className="mt-2 text-capitalize">{fav.pokemon_name}</h5>
-                <p className="text-muted">#{fav.pokemon_id}</p>
+              {/* Link to the detail page of this todo. */}
+              <Link to={"/single/" + item.id}>Nombre: {item.title} </Link>
 
-                {/* Boton eliminar */}
-                <button
-                  className="btn btn-danger btn-sm mt-2"
-                  onClick={() => removeFromFavorites(fav.id)}
-                >
-                  🗑️ Eliminar
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+              <p>Descripción</p>
+
+              <button className="btn btn-success"
+                onClick={() => dispatch({
+                  type: "add_task",
+                  payload: { id: item.id, color: '#ffa500' }
+                })}>
+                Lo tengo
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+      <br />
+
+      <Link to="/">
+        <button className="btn btn-primary">Inicio</button>
+      </Link>
     </div>
   );
 };
