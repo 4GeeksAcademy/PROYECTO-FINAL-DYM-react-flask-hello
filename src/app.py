@@ -6,8 +6,13 @@ from flask import jsonify, send_from_directory
 
 from api import create_app
 from api.utils import APIException, generate_sitemap
+from flask_jwt_extended import JWTManager
 
 app = create_app()
+
+# Setup the Flask-JWT-Extended extension
+app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this!
+jwt = JWTManager(app)
 
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"

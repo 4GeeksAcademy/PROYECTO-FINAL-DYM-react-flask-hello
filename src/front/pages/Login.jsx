@@ -10,7 +10,7 @@ export const Login = () => {
     const [form, setForm] = useState({
         email: "",
         password: "",
-        confirmPassword: ""
+        confirmPassword: "",
     });
 
     const [error, setError] = useState("");
@@ -32,14 +32,13 @@ export const Login = () => {
                 throw new Error("VITE_BACKEND_URL no está configurada.");
             }
 
-
-
             // --- REGISTRO ---
             if (!isLogin) {
                 if (form.password !== form.confirmPassword) {
                     setError("Las contraseñas no coinciden.");
                     return;
                 }
+                console.log("Registrando usuario:", form.email);
 
                 const resp = await fetch(`${backendUrl}/api/register`, {
                     method: "POST",
@@ -60,8 +59,6 @@ export const Login = () => {
                 setIsLogin(true);
                 return;
             }
-
-
 
             // --- LOGIN ---
             const resp = await fetch(`${backendUrl}/api/login`, {
@@ -96,7 +93,7 @@ export const Login = () => {
             className="d-flex justify-content-center align-items-center"
             style={{
                 minHeight: "100vh",
-                background: "linear-gradient(135deg, #d42424ff, #3b4cca)",
+                background: "linear-gradient(135deg, #3b4cca, #ffcb05)",
                 padding: "20px"
             }}
         >
@@ -108,10 +105,7 @@ export const Login = () => {
                     background: "white"
                 }}
             >
-
-
-
-                {/* Logo */}
+                {/* LOGO */}
                 <div className="text-center mb-3">
                     <img
                         src="https://www.pngkey.com/png/full/30-309982_19-pokeball-picture-freeuse-stock-ball-pokemon-huge.png"
@@ -120,16 +114,12 @@ export const Login = () => {
                     />
                 </div>
 
-
-
-                {/* Titulo */}
+                {/* TÍTULO */}
                 <h2 className="text-center fw-bold mb-3">
                     {isLogin ? "Iniciar Sesión" : "Crear una Cuenta"}
                 </h2>
 
-
-
-                {/* Form */}
+                {/* FORM */}
                 <form onSubmit={handleSubmit}>
 
                     <div className="mb-3">
@@ -158,9 +148,7 @@ export const Login = () => {
                         />
                     </div>
 
-
-
-                    {/* Confirma contraseña sooolo para registro*/}
+                    {/* CONFIRM PASSWORD SOLO PARA REGISTRO */}
                     {!isLogin && (
                         <div className="mb-3">
                             <label className="form-label fw-bold">Confirmar contraseña</label>
@@ -176,9 +164,7 @@ export const Login = () => {
                         </div>
                     )}
 
-
-
-                    {/* Mensajes */}
+                    {/* MENSAJES */}
                     {error && <p className="text-danger text-center fw-bold">{error}</p>}
                     {success && <p className="text-success text-center fw-bold">{success}</p>}
 
@@ -191,9 +177,7 @@ export const Login = () => {
                     </button>
                 </form>
 
-
-
-                {/* Cambiar login<->registro */}
+                {/* CAMBIAR ENTRE LOGIN Y REGISTRO */}
                 <p className="text-center mt-3">
                     {isLogin ? "¿No tienes cuenta? " : "¿Ya tienes cuenta? "}
                     <span
@@ -208,20 +192,6 @@ export const Login = () => {
                         {isLogin ? "Regístrate aquí" : "Inicia sesión aquí"}
                     </span>
                 </p>
-
-
-
-                {/* RESET PASSWORD ??? *
-                <p className="text-center mt-2">
-                    <span
-                        className="text-secondary"
-                        style={{ cursor: "pointer", textDecoration: "underline" }}
-                        onClick={() => navigate("/reset-password")}
-                    >
-                        ¿Olvidaste tu contraseña?
-                    </span>
-                </p>/*/}
-
 
 
             </div>

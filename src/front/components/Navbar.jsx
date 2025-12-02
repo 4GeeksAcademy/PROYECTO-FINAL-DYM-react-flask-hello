@@ -32,10 +32,6 @@ export const Navbar = () => {
                 {/* Botones a la derecha */}
                 <div className="d-flex gap-3">
 
-                    {/* Botón siempre visible: Inicio */}
-                    <Link to="/" className="btn btn-light fw-bold">
-                        Inicio
-                    </Link>
 
                     {/* Si el usuario NO está logueado */}
                     {!isLogged && (
@@ -51,9 +47,6 @@ export const Navbar = () => {
                                 Mi Pokédex
                             </Link>
 
-                            <Link to="/demo" className="btn btn-light fw-bold">
-                                Listas
-                            </Link>
 
                             <button
                                 className="btn btn-dark fw-bold"
