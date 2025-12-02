@@ -1,4 +1,3 @@
-// src/pages/Login.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
@@ -61,8 +60,8 @@ export const Login = () => {
         // Guardar usuario logueado
         localStorage.setItem("loggedUser", JSON.stringify(user));
 
-        // Guardar token (falso) en localStorage y en store para que navbar lo detecte
-        const token = "LOCAL_TOKEN"; // si usas backend pon aquí data.token
+  
+        const token = "LOCAL_TOKEN"; 
         localStorage.setItem("token", token);
         dispatch({ type: "set_token", payload: token });
 

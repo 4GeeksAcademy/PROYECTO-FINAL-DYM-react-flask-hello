@@ -5,12 +5,11 @@ export const Navbar = () => {
     const navigate = useNavigate();
     const { store, dispatch } = useGlobalReducer();
 
-    // ⚡ SIEMPRE leer token desde el store (que actualiza React)
-    // Y solo usar localStorage como respaldo
+
     const token = store.token || localStorage.getItem("token");
     const isLogged = !!token;
 
-    // 🔥 Cerrar sesión
+
     const handleLogout = () => {
         localStorage.removeItem("token");
         dispatch({ type: "set_token", payload: null });
@@ -38,14 +37,14 @@ export const Navbar = () => {
 
 
 
-                    {/* 🔥 Si NO hay token → mostrar iniciar sesión */}
+                 
                     {!isLogged && (
                         <Link to="/login" className="btn btn-warning fw-bold">
                             Iniciar sesión / Registrarse
                         </Link>
                     )}
 
-                    {/* 🔥 Si hay token → mostrar resto del menú */}
+                  
                     {isLogged && (
                         <>
                             <Link to="/pokedex" className="btn btn-light fw-bold">

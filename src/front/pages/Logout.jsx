@@ -5,9 +5,9 @@ export const Logout = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Limpiar sesión
+      
         localStorage.removeItem("token");
-        localStorage.removeItem("favorites");  // si quieres borrar también esto
+        localStorage.removeItem("favorites");  
     }, []);
 
     return (

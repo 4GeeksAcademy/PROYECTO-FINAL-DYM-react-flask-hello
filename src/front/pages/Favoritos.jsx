@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-// Funciones LocalStorage compartidas
+
 const getFavorites = () => {
     return JSON.parse(localStorage.getItem("favorites")) || [];
 };

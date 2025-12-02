@@ -12,7 +12,7 @@ export const Demo = () => {
   const token = localStorage.getItem("token");
 
 
-  ///////////////
+
 
 
   useEffect(() => {
@@ -24,7 +24,6 @@ export const Demo = () => {
   }, []);
 
 
-  // Obtener favoritos del backend
 
 
   const fetchFavorites = async () => {
@@ -52,7 +51,7 @@ export const Demo = () => {
   };
 
 
-  // Eliminar de favoritos
+
 
 
   const removeFromFavorites = async (favoriteId) => {
@@ -65,7 +64,7 @@ export const Demo = () => {
       });
 
       if (response.ok) {
-        // Actualizar la lista localmente
+
         setFavorites(favorites.filter(fav => fav.id !== favoriteId));
         alert("Eliminado de favoritos");
       } else {
@@ -81,15 +80,15 @@ export const Demo = () => {
   return (
     <div className="container">
       <ul className="list-group">
-        {/* Map over the 'todos' array from the store and render each item as a list element */}
+
         {store && store.todos?.map((item) => {
           return (
             <li
-              key={item.id}  // React key for list items.
+              key={item.id}  
               className="list-group-item d-flex justify-content-between"
               style={{ background: item.background }}>
 
-              {/* Link to the detail page of this todo. */}
+
               <Link to={"/single/" + item.id}>Nombre: {item.title} </Link>
 
               <p>Descripción</p>

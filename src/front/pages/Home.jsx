@@ -77,16 +77,7 @@ export const Home = () => {
 
 
 
-			{/* Imagen opcional ???
-			
-			<img
-				src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"
-				alt="Pikachu"
-				className="mb-4"
-				style={{ width: "100px" }}
-			/>
-
-			*/}
+	
 
 
 		</div>
