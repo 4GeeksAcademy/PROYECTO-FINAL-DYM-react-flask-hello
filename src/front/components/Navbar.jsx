@@ -46,6 +46,11 @@ export const Navbar = () => {
                             <Link to="/pokedex" className="btn btn-light fw-bold">
                                 Mi Pokédex
                             </Link>
+{/* ------------------------------------------------------- */}
+                            <Link to="/pokedex">
+                                <button className="btn btn-danger">Pokédex</button>
+                            </Link>
+
 
 
                             <button
